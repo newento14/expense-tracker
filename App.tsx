@@ -1,6 +1,5 @@
 import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Home from "./src/screens/Home";
 import Expenses from "./src/screens/Expenses";
@@ -8,7 +7,6 @@ import Expenses from "./src/screens/Expenses";
 import {Ionicons} from '@expo/vector-icons';
 
 
-const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 export default function App() {
@@ -20,6 +18,7 @@ export default function App() {
           headerStyle: {backgroundColor: '#fff'},
           headerTintColor: 'black',
           tabBarStyle: {backgroundColor: '#fff'},
+          headerShown: false,
           tabBarActiveTintColor: 'black',
         }}>
           <BottomTab.Screen name="Home" component={Home}

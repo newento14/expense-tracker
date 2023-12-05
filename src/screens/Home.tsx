@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Button, TextInput, View} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storeData = async (value) => {
+const storeData = async (value: string) => {
   try {
     await AsyncStorage.setItem('expenses', value);
   } catch (e) {
