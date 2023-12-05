@@ -5,31 +5,32 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Home from "./src/screens/Home";
 import Expenses from "./src/screens/Expenses";
 
+import {Ionicons} from '@expo/vector-icons';
+
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
-
-function ExpensesOverview() {
-  return (
-    <BottomTab.Navigator screenOptions={{
-      headerStyle: { backgroundColor: '#fff'  },
-      headerTintColor: 'black',
-      tabBarStyle: { backgroundColor: '#fff' },
-    }}>
-      <BottomTab.Screen name="Home" component={Home}/>
-      <BottomTab.Screen name="Expenses" component={Expenses}/>
-    </BottomTab.Navigator>
-  );
-}
 
 export default function App() {
   return (
     <>
       <StatusBar style="auto"/>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="ExpensesOverview" component={ExpensesOverview} options={{headerShown: false}} />
-        </Stack.Navigator>
+        <BottomTab.Navigator screenOptions={{
+          headerStyle: {backgroundColor: '#fff'},
+          headerTintColor: 'black',
+          tabBarStyle: {backgroundColor: '#fff'},
+          tabBarActiveTintColor: 'black',
+        }}>
+          <BottomTab.Screen name="Home" component={Home}
+                            options={{
+                              tabBarIcon: ({color, size}) => <Ionicons name="home" size={size} color={color}/>
+                            }}/>
+          <BottomTab.Screen name="Expenses" component={Expenses}
+                            options={{
+                              tabBarIcon: ({color, size}) => <Ionicons name="stats-chart" size={size} color={color}/>
+                            }}/>
+        </BottomTab.Navigator>
       </NavigationContainer>
     </>
   );
