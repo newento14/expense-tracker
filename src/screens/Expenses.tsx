@@ -1,12 +1,10 @@
-import React from 'react';
+import React from 'react'
 import {View} from "react-native";
 
-const Expenses = () => {
+export default () => {
   return (
     <View>
 
     </View>
-  );
-};
-
-export default Expenses;
+  )
+}
