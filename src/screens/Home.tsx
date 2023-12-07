@@ -51,9 +51,9 @@ const Home = () => {
               <View
                 style={{justifyContent: "space-between", display: "flex", flexDirection: 'row', width: "80%", height: 30, alignItems: 'center'}}>
                 <Text style={[styles.title, {fontWeight: '500', fontSize: 18}]}>{item.category}</Text>
-                <View style={{display: "flex", flexDirection: "row", alignItems: "flex-end"}}>
-                  <Text style={{fontSize: 14}}>$</Text>
-                  <Text style={{fontWeight: "bold", fontSize: 26}}>{item.expense}</Text>
+                <View style={{display: "flex", flexDirection: "row", alignItems: "center", height: "100%"}}>
+                  <Text style={{height: "55%"}}>$</Text>
+                  <Text style={{fontWeight: "bold", fontSize: 26, height:"100%"}}>{item.expense}</Text>
                 </View>
               </View>
             </TouchableOpacity>
