@@ -45,8 +45,11 @@ const AddNewModal: React.FC<AddNewModalProps> = ({handleChangeVisible, modalVisi
     setExpense((prevValue) => prevValue.slice(0, -1));
   }
 
-  console.log(state)
-
+  const handleConfirm = () => {
+    setState({...state, expense: Number(Number(expense).toFixed(2))});
+    //TODO: ADD TO ASYNC STORAGE
+    handleClose();
+  }
 
   return (
     <Modal style={{margin: 0, marginBottom: -50, justifyContent: 'flex-end'}}
@@ -101,7 +104,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({handleChangeVisible, modalVisi
           <View style={styles.row}>
             <TouchableOpacity activeOpacity={0.6} onPress={() => handleButtonPress('.')} style={styles.button}><Text style={styles.buttonText}>.</Text></TouchableOpacity>
             <TouchableOpacity activeOpacity={0.6} onPress={() => handleButtonPress('0')} style={styles.button}><Text style={styles.buttonText}>0</Text></TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} style={[styles.button, styles.confirmButton]}><Ionicons name="checkmark" size={36}
+            <TouchableOpacity activeOpacity={0.6} onPress={handleConfirm} style={[styles.button, styles.confirmButton]}><Ionicons name="checkmark" size={36}
                                                                           color="white"/></TouchableOpacity>
           </View>
         </View>
