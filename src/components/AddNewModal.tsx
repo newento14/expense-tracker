@@ -46,7 +46,10 @@ const AddNewModal: React.FC<AddNewModalProps> = ({handleChangeVisible, modalVisi
   }
 
   const handleConfirm = () => {
-    setState({...state, expense: Number(Number(expense).toFixed(2))});
+    const newExpense: IExpense = {
+      ...state,
+      expense: parseFloat(expense),
+    }
     //TODO: ADD TO ASYNC STORAGE
     handleClose();
   }
