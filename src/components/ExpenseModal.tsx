@@ -1,9 +1,12 @@
+import { AntDesign } from '@expo/vector-icons'
 import React, { FC } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Modal from 'react-native-modal'
-import { IExpense } from '../types/expenses'
+import { Categories, IExpense } from '../types/expenses'
 import { CategoryToColor, CategoryToIcon } from '../utils/CategoryToIcon'
+import AsyncStorageService from '../utils/asyncStorage'
 import { convertToCurrency, formatDate } from '../utils/format'
+import CategorySelect from './utils/CategorySelect'
 
 interface ExpenseModalProps {
 	item: IExpense
@@ -13,11 +16,17 @@ interface ExpenseModalProps {
 }
 
 const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
+	const bg = CategoryToColor[item.category]
+
 	const handleClose = () => {
 		setSelected(null)
 	}
 
-	const bg = CategoryToColor[item.category]
+	const handleChangeCategory = (newCategory: string) => {
+		const newItem = { ...item, category: newCategory as Categories }
+		AsyncStorageService.updateExpense(item, newItem)
+		setSelected(newItem)
+	}
 
 	return (
 		<Modal
@@ -44,11 +53,17 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 				)}
 				<View style={{ width: '100%', marginTop: 11 }}>
 					<View style={styles.line} />
-					<View style={[styles.category, { backgroundColor: bg }]}>
+					<TouchableOpacity
+						style={[styles.category, { backgroundColor: bg }]}
+						activeOpacity={0.4}
+						onPress={() => {}}
+					>
 						<Text style={{ fontSize: 15, fontWeight: '500' }}>
 							{item.category}
 						</Text>
-					</View>
+						<AntDesign name='edit' size={16} color='black' />
+					</TouchableOpacity>
+					<CategorySelect handleCategoryChange={handleChangeCategory} />
 				</View>
 				<Text style={styles.date}>{formatDate(item.date)}</Text>
 				<Text style={styles.currency}>-{convertToCurrency(item.expense)}</Text>
@@ -114,11 +129,15 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 	},
 	category: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'flex-end',
 		position: 'absolute',
 		alignSelf: 'center',
 		borderRadius: 20,
 		paddingHorizontal: 12,
 		paddingVertical: 3,
+		gap: 5,
 	},
 	date: {
 		fontSize: 16,

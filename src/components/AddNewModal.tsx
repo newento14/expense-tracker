@@ -7,21 +7,11 @@ import {
 	View,
 } from 'react-native'
 import Modal from 'react-native-modal'
-import RNPickerSelect from 'react-native-picker-select'
 import { Categories, IExpense } from '../types/expenses'
 
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorageService from '../utils/asyncStorage'
-
-const categories = [
-	{ label: '🍗 Food', value: 'Food' },
-	{ label: '🏠 Housing', value: 'Housing' },
-	{ label: '🚕 Transport', value: 'Transport' },
-	{ label: '👕 Clothing', value: 'Clothing' },
-	{ label: '💊 Healthcare', value: 'Healthcare' },
-	{ label: '📚 Education', value: 'Education' },
-	{ label: '🎉 Entertainment', value: 'Entertainment' },
-]
+import CategorySelect from './utils/CategorySelect'
 
 const InitialObject: IExpense = {
 	category: Categories.Other,
@@ -50,8 +40,8 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 		handleChangeVisible()
 	}
 
-	const handleCategoryChange = (value: string) => {
-		setState(prev => ({ ...prev, category: value as Categories }))
+	const handleCategoryChange = (newCategory: string) => {
+		setState(prev => ({ ...prev, category: newCategory as Categories }))
 	}
 
 	const handleButtonPress = (value: string) => {
@@ -90,11 +80,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 				<View style={styles.swipe_line_container}>
 					<View style={styles.swipe_line} />
 				</View>
-				<RNPickerSelect
-					placeholder={{ label: 'Other', value: 'other' }}
-					onValueChange={handleCategoryChange}
-					items={categories}
-				/>
+				<CategorySelect handleCategoryChange={handleCategoryChange} />
 				<Text style={{ opacity: 0.6 }}>Expenses</Text>
 				<View
 					style={{
