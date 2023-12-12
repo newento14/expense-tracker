@@ -83,54 +83,72 @@ const Home = () => {
 					</View>
 				</View>
 			</View>
-			<SafeAreaView style={styles.container}>
-				<SectionList
-					sections={Object.keys(expenses).map(title => ({
-						title: title,
-						data: expenses[title],
-					}))}
-					keyExtractor={(item, index) => item.date + index}
-					renderItem={({ item }) => (
-						<TouchableOpacity style={styles.item}>
-							<CategoryToIcon category={item.category} />
-							<View
-								style={{
-									justifyContent: 'space-between',
-									display: 'flex',
-									flexDirection: 'row',
-									width: '80%',
-									height: 30,
-									alignItems: 'center',
-								}}
-							>
-								<Text
-									style={[styles.title, { fontWeight: '500', fontSize: 18 }]}
-								>
-									{item.category}
-								</Text>
+			{Object.keys(expenses).length === 0 ? (
+				<View
+					style={{
+						width: '100%',
+						height: '50%',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
+				</View>
+			) : (
+				<SafeAreaView style={styles.container}>
+					<SectionList
+						sections={Object.keys(expenses).map(title => ({
+							title: title,
+							data: expenses[title],
+						}))}
+						keyExtractor={(item, index) => item.date + index}
+						renderItem={({ item }) => (
+							<TouchableOpacity style={styles.item}>
+								<CategoryToIcon category={item.category} />
 								<View
 									style={{
+										justifyContent: 'space-between',
 										display: 'flex',
 										flexDirection: 'row',
+										width: '80%',
+										height: 30,
 										alignItems: 'center',
-										height: '100%',
 									}}
 								>
-									<Text style={{ height: '55%' }}>$</Text>
 									<Text
-										style={{ fontWeight: 'bold', fontSize: 26, height: '100%' }}
+										style={[styles.title, { fontWeight: '500', fontSize: 18 }]}
 									>
-										{item.expense}
+										{item.category}
 									</Text>
+									<View
+										style={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center',
+											height: '100%',
+										}}
+									>
+										<Text style={{ height: '55%' }}>$</Text>
+										<Text
+											style={{
+												fontWeight: 'bold',
+												fontSize: 26,
+												height: '100%',
+											}}
+										>
+											{item.expense}
+										</Text>
+									</View>
 								</View>
-							</View>
-						</TouchableOpacity>
-					)}
-					renderSectionHeader={({ section: { title } }) => (
-						<Text style={styles.header}>{title}</Text>
-					)}
-				/>
-			</SafeAreaView>
+							</TouchableOpacity>
+						)}
+						renderSectionHeader={({ section: { title } }) => (
+							<Text style={styles.header}>{title}</Text>
+						)}
+					/>
+				</SafeAreaView>
+			)}
 		</>
 	)
 }
