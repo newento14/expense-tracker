@@ -5,15 +5,11 @@ import { CategoryToIcon } from '../utils/CategoryToIcon'
 
 interface ExpensesListItemProps {
 	item: IExpense
-	navigation: any
 }
 
-const ExpensesListItem: FC<ExpensesListItemProps> = ({ item, navigation }) => {
+const ExpensesListItem: FC<ExpensesListItemProps> = ({ item }) => {
 	return (
-		<TouchableOpacity
-			style={styles.item}
-			onPress={() => navigation.navigate('Expense', { item })}
-		>
+		<TouchableOpacity style={styles.item}>
 			<CategoryToIcon category={item.category} />
 			<View
 				style={{

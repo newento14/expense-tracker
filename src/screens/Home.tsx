@@ -9,7 +9,7 @@ import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
 
-const Home = ({ navigation }: { navigation: any }) => {
+const Home = () => {
 	const [loading, setLoading] = React.useState(true)
 	const [expenses, setExpenses] = React.useState<IExpense[]>([])
 	const [modalVisible, setModalVisible] = React.useState(false)
@@ -62,27 +62,39 @@ const Home = ({ navigation }: { navigation: any }) => {
 					<Text style={{ textAlign: 'center' }}>Day</Text>
 					<View style={styles.currency}>
 						<Text>$</Text>
-						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay.Today}
-						</Text>
+						{loading ? (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
+						) : (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+								{expensesByDay.Today}
+							</Text>
+						)}
 					</View>
 				</View>
 				<View style={styles.expense_block}>
 					<Text style={{ textAlign: 'center' }}>Week</Text>
 					<View style={styles.currency}>
 						<Text>$</Text>
-						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay['7d']}
-						</Text>
+						{loading ? (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
+						) : (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+								{expensesByDay['7d']}
+							</Text>
+						)}
 					</View>
 				</View>
 				<View style={styles.expense_block}>
 					<Text style={{ textAlign: 'center' }}>Month</Text>
 					<View style={styles.currency}>
 						<Text>$</Text>
-						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay['30d']}
-						</Text>
+						{loading ? (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
+						) : (
+							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+								{expensesByDay['30d']}
+							</Text>
+						)}
 					</View>
 				</View>
 			</View>
@@ -95,7 +107,7 @@ const Home = ({ navigation }: { navigation: any }) => {
 					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
 				</View>
 			) : (
-				<ExpensesList expenses={groupedExpenses} navigation={navigation} />
+				<ExpensesList expenses={groupedExpenses} />
 			)}
 		</>
 	)

@@ -11,10 +11,9 @@ import ExpensesListItem from './ExpensesListItem'
 
 interface ExpensesListProps {
 	expenses: Record<string, IExpense[]>
-	navigation: any
 }
 
-const ExpensesList: FC<ExpensesListProps> = ({ expenses, navigation }) => {
+const ExpensesList: FC<ExpensesListProps> = ({ expenses }) => {
 	return (
 		<SafeAreaView style={styles.container}>
 			<SectionList
@@ -23,9 +22,7 @@ const ExpensesList: FC<ExpensesListProps> = ({ expenses, navigation }) => {
 					data: expenses[title],
 				}))}
 				keyExtractor={(item, index) => item.date + index}
-				renderItem={({ item }) => (
-					<ExpensesListItem item={item} navigation={navigation} />
-				)}
+				renderItem={({ item }) => <ExpensesListItem item={item} />}
 				renderSectionHeader={({ section: { title } }) => (
 					<Text style={styles.header}>{title}</Text>
 				)}

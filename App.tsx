@@ -6,64 +6,46 @@ import Home from './src/screens/Home'
 
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'react-native'
-import Expense from './src/screens/Expense'
 
 const Stack = createNativeStackNavigator()
 const BottomTab = createBottomTabNavigator()
 
-function ExpensesOverview() {
-	return (
-		<BottomTab.Navigator
-			screenOptions={{
-				headerStyle: { backgroundColor: '#fff' },
-				headerTintColor: 'black',
-				tabBarStyle: { backgroundColor: '#fff' },
-				tabBarActiveTintColor: 'black',
-			}}
-		>
-			<BottomTab.Screen
-				name='Home'
-				component={Home}
-				options={{
-					headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						<Ionicons name='home' size={size} color={color} />
-					),
-				}}
-			/>
-			<BottomTab.Screen
-				name='Expenses'
-				component={Expenses}
-				options={{
-					headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						<Ionicons name='stats-chart' size={size} color={color} />
-					),
-				}}
-			/>
-		</BottomTab.Navigator>
-	)
-}
+function ExpensesOverview() {}
 
 export default function App() {
 	return (
 		<>
 			<StatusBar barStyle='dark-content' />
 			<NavigationContainer>
-				<Stack.Navigator>
-					<Stack.Screen
-						name='ExpensesOverview'
-						component={ExpensesOverview}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name='Expense'
-						component={Expense}
+				<BottomTab.Navigator
+					screenOptions={{
+						headerStyle: { backgroundColor: '#fff' },
+						headerTintColor: 'black',
+						tabBarStyle: { backgroundColor: '#fff' },
+						tabBarActiveTintColor: 'black',
+					}}
+				>
+					<BottomTab.Screen
+						name='Home'
+						component={Home}
 						options={{
-							presentation: 'card',
+							headerShown: false,
+							tabBarIcon: ({ color, size }) => (
+								<Ionicons name='home' size={size} color={color} />
+							),
 						}}
 					/>
-				</Stack.Navigator>
+					<BottomTab.Screen
+						name='Expenses'
+						component={Expenses}
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ color, size }) => (
+								<Ionicons name='stats-chart' size={size} color={color} />
+							),
+						}}
+					/>
+				</BottomTab.Navigator>
 			</NavigationContainer>
 		</>
 	)
