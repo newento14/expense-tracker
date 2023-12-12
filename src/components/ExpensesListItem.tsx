@@ -1,17 +1,19 @@
-import { FunctionComponent } from 'react'
+import { FC } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { IExpense } from '../types/expenses'
 import { CategoryToIcon } from '../utils/CategoryToIcon'
 
 interface ExpensesListItemProps {
 	item: IExpense
+	navigation: any
 }
 
-const ExpensesListItem: FunctionComponent<ExpensesListItemProps> = ({
-	item,
-}) => {
+const ExpensesListItem: FC<ExpensesListItemProps> = ({ item, navigation }) => {
 	return (
-		<TouchableOpacity style={styles.item}>
+		<TouchableOpacity
+			style={styles.item}
+			onPress={() => navigation.navigate('Expense', { item })}
+		>
 			<CategoryToIcon category={item.category} />
 			<View
 				style={{

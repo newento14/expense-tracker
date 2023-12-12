@@ -9,7 +9,7 @@ import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
 
-const Home = () => {
+const Home = ({ navigation }: { navigation: any }) => {
 	const [loading, setLoading] = React.useState(true)
 	const [expenses, setExpenses] = React.useState<IExpense[]>([])
 	const [modalVisible, setModalVisible] = React.useState(false)
@@ -17,7 +17,6 @@ const Home = () => {
 
 	const getData = async (): Promise<void> => {
 		const data = await AsyncStorageService.getExpenses()
-		console.log(data)
 		setExpensesByDay(calculateExpenses(data))
 		setExpenses(data)
 		setLoading(false)
@@ -96,7 +95,7 @@ const Home = () => {
 					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
 				</View>
 			) : (
-				<ExpensesList expenses={groupedExpenses} />
+				<ExpensesList expenses={groupedExpenses} navigation={navigation} />
 			)}
 		</>
 	)

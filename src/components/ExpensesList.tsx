@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FC } from 'react'
 import {
 	SafeAreaView,
 	SectionList,
@@ -11,9 +11,10 @@ import ExpensesListItem from './ExpensesListItem'
 
 interface ExpensesListProps {
 	expenses: Record<string, IExpense[]>
+	navigation: any
 }
 
-const ExpensesList: FunctionComponent<ExpensesListProps> = ({ expenses }) => {
+const ExpensesList: FC<ExpensesListProps> = ({ expenses, navigation }) => {
 	return (
 		<SafeAreaView style={styles.container}>
 			<SectionList
@@ -22,7 +23,9 @@ const ExpensesList: FunctionComponent<ExpensesListProps> = ({ expenses }) => {
 					data: expenses[title],
 				}))}
 				keyExtractor={(item, index) => item.date + index}
-				renderItem={({ item }) => <ExpensesListItem item={item} />}
+				renderItem={({ item }) => (
+					<ExpensesListItem item={item} navigation={navigation} />
+				)}
 				renderSectionHeader={({ section: { title } }) => (
 					<Text style={styles.header}>{title}</Text>
 				)}

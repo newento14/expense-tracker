@@ -21,15 +21,7 @@ export default class AsyncStorageService {
 	static async getExpenses() {
 		try {
 			const value = await AsyncStorage.getItem(EXPENSES_KEY)
-			console.log(
-				'🚀 ~ file: asyncStorage.ts:24 ~ AsyncStorageService ~ getExpenses ~ value:',
-				value
-			)
 			const data = (await JSON.parse(value || '[]')) as IExpense[]
-			console.log(
-				'🚀 ~ file: asyncStorage.ts:26 ~ AsyncStorageService ~ getExpenses ~ data:',
-				data
-			)
 			return data
 		} catch (e) {
 			console.log(e)
