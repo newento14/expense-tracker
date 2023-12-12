@@ -29,6 +29,22 @@ export default class AsyncStorageService {
 		}
 	}
 
+	static async updateExpense(oldExpense: IExpense, newExpense: IExpense) {
+		try {
+			const expenses = await this.getExpenses()
+
+			expenses.forEach((expenseItem, index) => {
+				if (this.compareExpense(expenseItem, oldExpense)) {
+					expenses[index] = newExpense
+				}
+			})
+
+			await AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	static async deleteExpense(expense: IExpense) {
 		try {
 			const expenses = await AsyncStorage.getItem(EXPENSES_KEY)

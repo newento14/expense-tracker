@@ -1,8 +1,9 @@
 import React, { FC } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Modal from 'react-native-modal'
 import { IExpense } from '../types/expenses'
 import { CategoryToColor, CategoryToIcon } from '../utils/CategoryToIcon'
+import { convertToCurrency, formatDate } from '../utils/format'
 
 interface ExpenseModalProps {
 	item: IExpense
@@ -16,6 +17,8 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 		setSelected(null)
 	}
 
+	const bg = CategoryToColor[item.category]
+
 	return (
 		<Modal
 			style={{ margin: 0, marginBottom: -50, justifyContent: 'flex-end' }}
@@ -24,12 +27,7 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 			isVisible={true}
 		>
 			<View style={styles.modal}>
-				<View
-					style={[
-						styles.header,
-						{ backgroundColor: CategoryToColor[item.category] },
-					]}
-				>
+				<View style={[styles.header, { backgroundColor: bg }]}>
 					<View style={styles.swipe_line_container}>
 						<View style={styles.swipe_line} />
 					</View>
@@ -39,6 +37,21 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 						{CategoryToIcon({ category: item.category })}
 					</View>
 				</View>
+				{item.comment !== '' ? (
+					<Text style={styles.comment}>{item.comment}</Text>
+				) : (
+					<Text style={styles.comment}>No comment</Text>
+				)}
+				<View style={{ width: '100%', marginTop: 11 }}>
+					<View style={styles.line} />
+					<View style={[styles.category, { backgroundColor: bg }]}>
+						<Text style={{ fontSize: 15, fontWeight: '500' }}>
+							{item.category}
+						</Text>
+					</View>
+				</View>
+				<Text style={styles.date}>{formatDate(item.date)}</Text>
+				<Text style={styles.currency}>-{convertToCurrency(item.expense)}</Text>
 			</View>
 		</Modal>
 	)
@@ -90,6 +103,32 @@ const styles = StyleSheet.create({
 		height: 5,
 		backgroundColor: 'gray',
 		borderRadius: 5,
+	},
+	comment: {
+		marginTop: 15,
+	},
+	line: {
+		width: '100%',
+		height: 1,
+		backgroundColor: 'gray',
+		marginTop: 15,
+	},
+	category: {
+		position: 'absolute',
+		alignSelf: 'center',
+		borderRadius: 20,
+		paddingHorizontal: 12,
+		paddingVertical: 3,
+	},
+	date: {
+		fontSize: 16,
+		fontWeight: '500',
+		marginTop: 15,
+	},
+	currency: {
+		fontSize: 32,
+		fontWeight: '600',
+		marginTop: 15,
 	},
 })
 
