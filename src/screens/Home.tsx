@@ -4,6 +4,7 @@ import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
 import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
+import AsyncStorageService from '../utils/asyncStorage'
 import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
@@ -15,17 +16,11 @@ const Home = () => {
 	const [expensesByDay, setExpensesByDay] = React.useState({} as IExpenseByDate)
 
 	const getData = async (): Promise<void> => {
-		try {
-			const value = await AsyncStorage.getItem('expenses')
-			const data = (await JSON.parse(value || '[]')) as IExpense[]
-			setExpensesByDay(calculateExpenses(data))
-			setExpenses(data)
-		} catch (e) {
-			console.error(e)
-			setExpenses([])
-		} finally {
-			setLoading(false)
-		}
+		const data = await AsyncStorageService.getExpenses()
+		console.log(data)
+		setExpensesByDay(calculateExpenses(data))
+		setExpenses(data)
+		setLoading(false)
 	}
 
 	useEffect(() => {

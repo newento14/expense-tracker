@@ -11,7 +11,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import { Categories, IExpense } from '../types/expenses'
 
 import { Ionicons } from '@expo/vector-icons'
-import { addExpense } from '../utils/asyncStorage'
+import AsyncStorageService from '../utils/asyncStorage'
 
 const InitialObject: IExpense = {
 	category: Categories.Other,
@@ -64,7 +64,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 			...state,
 			expense: parseFloat(expense),
 		}
-		addExpense(newExpense)
+		AsyncStorageService.addExpense(newExpense)
 		pushNewExpense(newExpense)
 		handleClose()
 	}

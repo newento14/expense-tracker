@@ -1,4 +1,5 @@
 export interface IExpense {
+	[key: string]: any
 	date: string
 	expense: number
 	category: Categories
