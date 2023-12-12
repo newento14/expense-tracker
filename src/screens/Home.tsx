@@ -1,36 +1,30 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useEffect, useRef } from 'react'
-import {
-	Button,
-	SafeAreaView,
-	SectionList,
-	StatusBar,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from 'react-native'
+import React, { useEffect, useLayoutEffect } from 'react'
+import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
+import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
-import { CategoryToIcon } from '../utils/CategoryToIcon'
 import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
 
 const Home = () => {
-	const [expenses, setExpenses] = React.useState<UnspecifiedObject>({})
+	const [loading, setLoading] = React.useState(true)
+	const [expenses, setExpenses] = React.useState<IExpense[]>([])
 	const [modalVisible, setModalVisible] = React.useState(false)
-	const expensesByDay = useRef({} as IExpenseByDate)
+	const [expensesByDay, setExpensesByDay] = React.useState({} as IExpenseByDate)
 
 	const getData = async (): Promise<void> => {
 		try {
 			const value = await AsyncStorage.getItem('expenses')
 			const data = (await JSON.parse(value || '[]')) as IExpense[]
-			expensesByDay.current = calculateExpenses(data)
-			setExpenses(formatArray(data))
+			setExpensesByDay(calculateExpenses(data))
+			setExpenses(data)
 		} catch (e) {
 			console.error(e)
-			setExpenses({})
+			setExpenses([])
+		} finally {
+			setLoading(false)
 		}
 	}
 
@@ -38,17 +32,32 @@ const Home = () => {
 		getData()
 	}, [])
 
+	useLayoutEffect(() => {
+		setExpensesByDay(calculateExpenses(expenses))
+	}, [expenses])
+
 	const handleChangeVisible = () => {
 		setModalVisible(prev => !prev)
 	}
 
 	const handleAddExpense = (expense: IExpense) => {
-		setExpenses({ ...expenses, Today: [expense, ...expenses.Today] })
+		setExpenses(prev => [expense, ...prev])
 	}
+
+	const handleClearStorage = async () => {
+		try {
+			await AsyncStorage.removeItem('expenses')
+		} catch (e) {
+			console.error(e)
+		}
+	}
+
+	const groupedExpenses = formatArray(expenses) as UnspecifiedObject
 
 	return (
 		<>
 			<Button title={'add'} onPress={handleChangeVisible} />
+			<Button title={'clear'} onPress={handleClearStorage} />
 			<AddNewModal
 				modalVisible={modalVisible}
 				handleChangeVisible={handleChangeVisible}
@@ -60,7 +69,7 @@ const Home = () => {
 					<View style={styles.currency}>
 						<Text>$</Text>
 						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay.current.Today}
+							{expensesByDay.Today}
 						</Text>
 					</View>
 				</View>
@@ -69,7 +78,7 @@ const Home = () => {
 					<View style={styles.currency}>
 						<Text>$</Text>
 						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay.current['7d']}
+							{expensesByDay['7d']}
 						</Text>
 					</View>
 				</View>
@@ -78,104 +87,33 @@ const Home = () => {
 					<View style={styles.currency}>
 						<Text>$</Text>
 						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expensesByDay.current['30d']}
+							{expensesByDay['30d']}
 						</Text>
 					</View>
 				</View>
 			</View>
-			{Object.keys(expenses).length === 0 ? (
-				<View
-					style={{
-						width: '100%',
-						height: '50%',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-					}}
-				>
+			{loading ? (
+				<View style={styles.empty_list_container}>
+					<ActivityIndicator size={'large'} />
+				</View>
+			) : Object.keys(expenses).length === 0 ? (
+				<View style={styles.empty_list_container}>
 					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
 				</View>
 			) : (
-				<SafeAreaView style={styles.container}>
-					<SectionList
-						sections={Object.keys(expenses).map(title => ({
-							title: title,
-							data: expenses[title],
-						}))}
-						keyExtractor={(item, index) => item.date + index}
-						renderItem={({ item }) => (
-							<TouchableOpacity style={styles.item}>
-								<CategoryToIcon category={item.category} />
-								<View
-									style={{
-										justifyContent: 'space-between',
-										display: 'flex',
-										flexDirection: 'row',
-										width: '80%',
-										height: 30,
-										alignItems: 'center',
-									}}
-								>
-									<Text
-										style={[styles.title, { fontWeight: '500', fontSize: 18 }]}
-									>
-										{item.category}
-									</Text>
-									<View
-										style={{
-											display: 'flex',
-											flexDirection: 'row',
-											alignItems: 'center',
-											height: '100%',
-										}}
-									>
-										<Text style={{ height: '55%' }}>$</Text>
-										<Text
-											style={{
-												fontWeight: 'bold',
-												fontSize: 26,
-												height: '100%',
-											}}
-										>
-											{item.expense}
-										</Text>
-									</View>
-								</View>
-							</TouchableOpacity>
-						)}
-						renderSectionHeader={({ section: { title } }) => (
-							<Text style={styles.header}>{title}</Text>
-						)}
-					/>
-				</SafeAreaView>
+				<ExpensesList expenses={groupedExpenses} />
 			)}
 		</>
 	)
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingTop: StatusBar.currentHeight,
-		marginHorizontal: 16,
-	},
-	item: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
+	empty_list_container: {
 		width: '100%',
-		padding: 20,
-		marginVertical: 8,
-	},
-	header: {
-		alignSelf: 'center',
-		fontSize: 14,
-		fontWeight: 'bold',
-		opacity: 0.5,
-	},
-	title: {
-		marginLeft: 12,
-		fontSize: 24,
+		height: '50%',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	expense_block_list: {
 		display: 'flex',
