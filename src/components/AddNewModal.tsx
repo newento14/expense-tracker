@@ -49,7 +49,10 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 			setExpense(value)
 			return
 		}
-		setExpense(prevValue => prevValue + value)
+		setExpense(prevValue => {
+			if (prevValue.length > 5) return prevValue
+			return prevValue + value
+		})
 	}
 
 	const handleRemoveLast = () => {

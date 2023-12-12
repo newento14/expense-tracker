@@ -1,8 +1,6 @@
-import { IExpense } from '../types/expenses'
+import { IExpense, IExpenseByDate } from '../types/expenses'
 
-export const calculateExpenses = (
-	expenses: IExpense[]
-): { Today: number; '7d': number; '30d': number } => {
+export const calculateExpenses = (expenses: IExpense[]): IExpenseByDate => {
 	const [day, month, year] = new Date().toLocaleDateString('en-GB').split('/')
 	let today = 0
 	let sevenDays = 0

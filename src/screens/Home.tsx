@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
 	Button,
 	SafeAreaView,
@@ -11,7 +11,7 @@ import {
 	View,
 } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
-import { IExpense } from '../types/expenses'
+import { IExpense, IExpenseByDate } from '../types/expenses'
 import { CategoryToIcon } from '../utils/CategoryToIcon'
 import { calculateExpenses, formatArray } from '../utils/calculate'
 
@@ -20,12 +20,13 @@ type UnspecifiedObject = Record<string, IExpense[]>
 const Home = () => {
 	const [expenses, setExpenses] = React.useState<UnspecifiedObject>({})
 	const [modalVisible, setModalVisible] = React.useState(false)
+	const expensesByDay = useRef({} as IExpenseByDate)
 
 	const getData = async (): Promise<void> => {
 		try {
 			const value = await AsyncStorage.getItem('expenses')
 			const data = (await JSON.parse(value || '[]')) as IExpense[]
-			console.log(calculateExpenses(data))
+			expensesByDay.current = calculateExpenses(data)
 			setExpenses(formatArray(data))
 		} catch (e) {
 			console.error(e)
@@ -42,11 +43,6 @@ const Home = () => {
 	}
 
 	const handleAddExpense = (expense: IExpense) => {
-		console.log('🚀 ~ file: Home.tsx:45 ~ handleAddExpense ~ expense:', expense)
-		console.log(
-			'🚀 ~ file: Home.tsx:47 ~ handleAddExpense ~ expenses:',
-			expenses
-		)
 		setExpenses({ ...expenses, Today: [expense, ...expenses.Today] })
 	}
 
@@ -58,8 +54,34 @@ const Home = () => {
 				handleChangeVisible={handleChangeVisible}
 				pushNewExpense={handleAddExpense}
 			/>
-			<View>
-				<View></View>
+			<View style={styles.expense_block_list}>
+				<View style={styles.expense_block}>
+					<Text style={{ textAlign: 'center' }}>Day</Text>
+					<View style={styles.currency}>
+						<Text>$</Text>
+						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+							{expensesByDay.current.Today}
+						</Text>
+					</View>
+				</View>
+				<View style={styles.expense_block}>
+					<Text style={{ textAlign: 'center' }}>Week</Text>
+					<View style={styles.currency}>
+						<Text>$</Text>
+						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+							{expensesByDay.current['7d']}
+						</Text>
+					</View>
+				</View>
+				<View style={styles.expense_block}>
+					<Text style={{ textAlign: 'center' }}>Month</Text>
+					<View style={styles.currency}>
+						<Text>$</Text>
+						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+							{expensesByDay.current['30d']}
+						</Text>
+					</View>
+				</View>
 			</View>
 			<SafeAreaView style={styles.container}>
 				<SectionList
@@ -136,6 +158,34 @@ const styles = StyleSheet.create({
 	title: {
 		marginLeft: 12,
 		fontSize: 24,
+	},
+	expense_block_list: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		gap: 20,
+		width: '100%',
+		height: 100,
+		paddingLeft: 20,
+		paddingRight: 20,
+		marginTop: 20,
+	},
+	expense_block: {
+		backgroundColor: '#fff',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 15,
+		borderRadius: 22,
+		minWidth: '27%',
+	},
+	currency: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		alignItems: 'flex-end',
+		height: '41%',
 	},
 })
 

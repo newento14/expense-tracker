@@ -15,3 +15,9 @@ export enum Categories {
 	Transport = 'Transport',
 	Other = 'Other',
 }
+
+export interface IExpenseByDate {
+	Today: number
+	'7d': number
+	'30d': number
+}
