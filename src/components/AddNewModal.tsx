@@ -13,6 +13,16 @@ import { Categories, IExpense } from '../types/expenses'
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorageService from '../utils/asyncStorage'
 
+const categories = [
+	{ label: '🍗 Food', value: 'Food' },
+	{ label: '🏠 Housing', value: 'Housing' },
+	{ label: '🚕 Transport', value: 'Transport' },
+	{ label: '👕 Clothing', value: 'Clothing' },
+	{ label: '💊 Healthcare', value: 'Healthcare' },
+	{ label: '📚 Education', value: 'Education' },
+	{ label: '🎉 Entertainment', value: 'Entertainment' },
+]
+
 const InitialObject: IExpense = {
 	category: Categories.Other,
 	expense: 0,
@@ -70,196 +80,168 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 	}
 
 	return (
-		<>
-			<Modal
-				style={{ margin: 0, marginBottom: -50, justifyContent: 'flex-end' }}
-				onSwipeComplete={handleClose}
-				swipeDirection='down'
-				isVisible={modalVisible}
-			>
+		<Modal
+			style={{ margin: 0, marginBottom: -50, justifyContent: 'flex-end' }}
+			onSwipeComplete={handleClose}
+			swipeDirection='down'
+			isVisible={modalVisible}
+		>
+			<View style={styles.modal}>
+				<View style={styles.swipe_line_container}>
+					<View style={styles.swipe_line} />
+				</View>
+				<RNPickerSelect
+					placeholder={{ label: 'Other', value: 'other' }}
+					onValueChange={handleCategoryChange}
+					items={categories}
+				/>
+				<Text style={{ opacity: 0.6 }}>Expenses</Text>
 				<View
 					style={{
-						backgroundColor: '#fff',
-						height: '70%',
-						width: '100%',
-						borderRadius: 50,
 						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
+						flexDirection: 'row',
+						alignItems: 'flex-end',
 					}}
 				>
-					<View
-						style={{
-							width: '100%',
-							height: 50,
-							display: 'flex',
-							justifyContent: 'center',
-							alignItems: 'center',
-						}}
-					>
-						<View
-							style={{
-								width: '10%',
-								height: 5,
-								backgroundColor: 'gray',
-								borderRadius: 5,
-							}}
-						/>
+					<Text style={{ fontSize: 18 }}>$</Text>
+					<Text style={{ fontWeight: 'bold', fontSize: 36, height: '85%' }}>
+						{expense}
+					</Text>
+				</View>
+				<TextInput
+					style={{ margin: 5 }}
+					placeholder={'Add comment'}
+					value={state.comment}
+					onChangeText={text => setState(prev => ({ ...prev, comment: text }))}
+				/>
+				<View style={styles.grid}>
+					<View style={styles.row}>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('1')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>1</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('2')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>2</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('3')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>3</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={handleRemoveLast}
+							style={[styles.button, { backgroundColor: '#ffe0d7' }]}
+						>
+							<Ionicons name='backspace' size={24} color='black' />
+						</TouchableOpacity>
 					</View>
-					<RNPickerSelect
-						placeholder={{ label: 'Other', value: 'other' }}
-						onValueChange={handleCategoryChange}
-						items={[
-							{ label: '🍗 Food', value: 'Food' },
-							{ label: '🏠 Housing', value: 'Housing' },
-							{ label: '🚕 Transport', value: 'Transport' },
-							{ label: '👕 Clothing', value: 'Clothing' },
-							{ label: '💊 Healthcare', value: 'Healthcare' },
-							{ label: '📚 Education', value: 'Education' },
-							{ label: '🎉 Entertainment', value: 'Entertainment' },
-						]}
-					/>
-					<Text style={{ opacity: 0.6 }}>Expenses</Text>
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							alignItems: 'flex-end',
-						}}
-					>
-						<Text style={{ fontSize: 18 }}>$</Text>
-						<Text style={{ fontWeight: 'bold', fontSize: 36, height: '85%' }}>
-							{expense}
-						</Text>
+					<View style={styles.row}>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('4')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>4</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('5')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>5</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('6')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>6</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							style={[styles.button, { backgroundColor: '#e0ebfe' }]}
+						>
+							<Ionicons name='md-calendar-sharp' size={24} color='black' />
+						</TouchableOpacity>
 					</View>
-					<TextInput
-						style={{ margin: 5 }}
-						placeholder={'Add comment'}
-						value={state.comment}
-						onChangeText={text =>
-							setState(prev => ({ ...prev, comment: text }))
-						}
-					/>
-					<View style={styles.grid}>
-						<View style={styles.row}>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('1')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>1</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('2')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>2</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('3')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>3</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={handleRemoveLast}
-								style={[styles.button, { backgroundColor: '#ffe0d7' }]}
-							>
-								<Ionicons name='backspace' size={24} color='black' />
-							</TouchableOpacity>
-						</View>
-						<View style={styles.row}>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('4')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>4</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('5')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>5</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('6')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>6</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								style={[styles.button, { backgroundColor: '#e0ebfe' }]}
-							>
-								<Ionicons name='md-calendar-sharp' size={24} color='black' />
-							</TouchableOpacity>
-						</View>
-						<View style={styles.row}>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('7')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>7</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('8')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>8</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('9')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>9</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								style={[styles.button, { backgroundColor: '#fff8da' }]}
-							>
-								<Text style={styles.buttonText}>$</Text>
-							</TouchableOpacity>
-						</View>
-						<View style={styles.row}>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('.')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>.</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={() => handleButtonPress('0')}
-								style={styles.button}
-							>
-								<Text style={styles.buttonText}>0</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								activeOpacity={0.6}
-								onPress={handleConfirm}
-								style={[styles.button, styles.confirmButton]}
-							>
-								<Ionicons name='checkmark' size={36} color='white' />
-							</TouchableOpacity>
-						</View>
+					<View style={styles.row}>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('7')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>7</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('8')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>8</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('9')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>9</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							style={[styles.button, { backgroundColor: '#fff8da' }]}
+						>
+							<Text style={styles.buttonText}>$</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.row}>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('.')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>.</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={() => handleButtonPress('0')}
+							style={styles.button}
+						>
+							<Text style={styles.buttonText}>0</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							activeOpacity={0.6}
+							onPress={handleConfirm}
+							style={[styles.button, styles.confirmButton]}
+						>
+							<Ionicons name='checkmark' size={36} color='white' />
+						</TouchableOpacity>
 					</View>
 				</View>
-			</Modal>
-		</>
+			</View>
+		</Modal>
 	)
 }
 
 const styles = StyleSheet.create({
+	modal: {
+		backgroundColor: '#fff',
+		height: '70%',
+		width: '100%',
+		borderRadius: 50,
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
 	grid: {
 		display: 'flex',
 		flexDirection: 'row',
@@ -293,6 +275,19 @@ const styles = StyleSheet.create({
 	confirmButton: {
 		width: '46%',
 		backgroundColor: 'black',
+	},
+	swipe_line_container: {
+		width: '100%',
+		height: 50,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	swipe_line: {
+		width: '10%',
+		height: 5,
+		backgroundColor: 'gray',
+		borderRadius: 5,
 	},
 })
 

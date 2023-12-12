@@ -11,9 +11,10 @@ import ExpensesListItem from './ExpensesListItem'
 
 interface ExpensesListProps {
 	expenses: Record<string, IExpense[]>
+	setSelected: (item: IExpense | null) => void
 }
 
-const ExpensesList: FC<ExpensesListProps> = ({ expenses }) => {
+const ExpensesList: FC<ExpensesListProps> = ({ expenses, setSelected }) => {
 	return (
 		<SafeAreaView style={styles.container}>
 			<SectionList
@@ -22,7 +23,9 @@ const ExpensesList: FC<ExpensesListProps> = ({ expenses }) => {
 					data: expenses[title],
 				}))}
 				keyExtractor={(item, index) => item.date + index}
-				renderItem={({ item }) => <ExpensesListItem item={item} />}
+				renderItem={({ item }) => (
+					<ExpensesListItem item={item} setSelected={setSelected} />
+				)}
 				renderSectionHeader={({ section: { title } }) => (
 					<Text style={styles.header}>{title}</Text>
 				)}

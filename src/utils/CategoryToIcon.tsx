@@ -3,7 +3,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Categories } from '../types/expenses'
 
-const CategoryToColor = {
+export const CategoryToColor = {
 	[Categories.Food]: '#ffe0d7',
 	[Categories.Transport]: '#ffe1a7',
 	[Categories.Entertainment]: '#e9dffe',

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
+import ExpenseModal from '../components/ExpenseModal'
 import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
 import AsyncStorageService from '../utils/asyncStorage'
@@ -14,6 +15,13 @@ const Home = () => {
 	const [expenses, setExpenses] = React.useState<IExpense[]>([])
 	const [modalVisible, setModalVisible] = React.useState(false)
 	const [expensesByDay, setExpensesByDay] = React.useState({} as IExpenseByDate)
+
+	const [selectedExpense, setSelectedExpense] = React.useState<IExpense | null>(
+		null
+	)
+	const [expenseModalVisible, setExpenseModalVisible] = React.useState(false)
+
+	console.log(selectedExpense)
 
 	const getData = async (): Promise<void> => {
 		const data = await AsyncStorageService.getExpenses()
@@ -57,6 +65,14 @@ const Home = () => {
 				handleChangeVisible={handleChangeVisible}
 				pushNewExpense={handleAddExpense}
 			/>
+			{selectedExpense && (
+				<ExpenseModal
+					item={selectedExpense}
+					setSelected={setSelectedExpense}
+					visible={true}
+					setVisible={() => setExpenseModalVisible(prev => !prev)}
+				/>
+			)}
 			<View style={styles.expense_block_list}>
 				<View style={styles.expense_block}>
 					<Text style={{ textAlign: 'center' }}>Day</Text>
@@ -107,7 +123,10 @@ const Home = () => {
 					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
 				</View>
 			) : (
-				<ExpensesList expenses={groupedExpenses} />
+				<ExpensesList
+					expenses={groupedExpenses}
+					setSelected={setSelectedExpense}
+				/>
 			)}
 		</>
 	)
