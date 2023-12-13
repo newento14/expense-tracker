@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import KeyboardButton from './KeyboardButton'
 
@@ -15,7 +15,7 @@ interface KeyboardProps {
 	handleConfirm: () => void
 }
 
-const Keyboard: FC<KeyboardProps> = ({ setExpense, handleConfirm }) => {
+const Keyboard: FC<KeyboardProps> = memo(({ setExpense, handleConfirm }) => {
 	const handleButtonPress = (value: string) =>
 		React.useCallback(() => {
 			setExpense(prevValue => {
@@ -105,7 +105,7 @@ const Keyboard: FC<KeyboardProps> = ({ setExpense, handleConfirm }) => {
 			</View>
 		</View>
 	)
-}
+})
 
 const styles = StyleSheet.create({
 	grid: {

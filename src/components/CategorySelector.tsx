@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons'
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import {
 	FlatList,
 	StyleSheet,
@@ -28,63 +28,61 @@ interface CategorySelectorProps {
 	style?: object
 }
 
-const CategorySelector: FC<CategorySelectorProps> = ({
-	item,
-	changeCategory,
-	style = {},
-}) => {
-	const [visible, setVisible] = React.useState(false)
-	const bg = CategoryToColor[item.category]
+const CategorySelector: FC<CategorySelectorProps> = memo(
+	({ item, changeCategory, style = {} }) => {
+		const [visible, setVisible] = React.useState(false)
+		const bg = CategoryToColor[item.category]
 
-	const changeVisible = () => {
-		setVisible(prev => !prev)
-	}
+		const changeVisible = () => {
+			setVisible(prev => !prev)
+		}
 
-	const handleClose = () => {
-		changeVisible()
-	}
+		const handleClose = () => {
+			changeVisible()
+		}
 
-	return (
-		<>
-			<View style={{ width: '100%', ...style, marginBottom: 12 }}>
-				<View style={styles.line} />
-				<TouchableOpacity
-					style={[styles.category, { backgroundColor: bg }]}
-					activeOpacity={0.6}
-					onPress={changeVisible}
-				>
-					<Text style={{ fontSize: 15, fontWeight: '500' }}>
-						{item.category}
-					</Text>
-					<AntDesign name='edit' size={16} color='black' />
-				</TouchableOpacity>
-			</View>
-			<Modal
-				style={styles.modal}
-				isVisible={visible}
-				onBackdropPress={handleClose}
-			>
-				<View style={styles.content}>
-					<FlatList
-						data={categories}
-						ItemSeparatorComponent={() => <View style={styles.separator} />}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								style={styles.item}
-								onPress={() => {
-									changeCategory(item.value)
-									changeVisible()
-								}}
-							>
-								<Text style={styles.text}>{item.label}</Text>
-							</TouchableOpacity>
-						)}
-					/>
+		return (
+			<>
+				<View style={{ width: '100%', ...style, marginBottom: 12 }}>
+					<View style={styles.line} />
+					<TouchableOpacity
+						style={[styles.category, { backgroundColor: bg }]}
+						activeOpacity={0.6}
+						onPress={changeVisible}
+					>
+						<Text style={{ fontSize: 15, fontWeight: '500' }}>
+							{item.category}
+						</Text>
+						<AntDesign name='edit' size={16} color='black' />
+					</TouchableOpacity>
 				</View>
-			</Modal>
-		</>
-	)
-}
+				<Modal
+					style={styles.modal}
+					isVisible={visible}
+					onBackdropPress={handleClose}
+				>
+					<View style={styles.content}>
+						<FlatList
+							data={categories}
+							ItemSeparatorComponent={() => <View style={styles.separator} />}
+							renderItem={({ item }) => (
+								<TouchableOpacity
+									style={styles.item}
+									onPress={() => {
+										changeCategory(item.value)
+										changeVisible()
+									}}
+								>
+									<Text style={styles.text}>{item.label}</Text>
+								</TouchableOpacity>
+							)}
+						/>
+					</View>
+				</Modal>
+			</>
+		)
+	}
+)
 
 const styles = StyleSheet.create({
 	modal: {

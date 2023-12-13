@@ -12,6 +12,11 @@ import {
 } from '../utils/format'
 import CategorySelector from './CategorySelector'
 import Keyboard from './Keyboard'
+
+const SelectorStyles = {
+	marginTop: 12,
+}
+
 interface ExpenseModalProps {
 	item: IExpense
 	setSelected: (item: IExpense | null) => void
@@ -23,17 +28,12 @@ const ExpenseModal: FC<ExpenseModalProps> = ({
 	setSelected,
 	updateExpense,
 }) => {
-	const [visible, setVisible] = React.useState(false)
 	const [keyboardVisible, setKeyboardVisible] = React.useState(false)
 	const [expense, setExpense] = React.useState<string>(
 		convertToCurrency(item.expense)
 	)
 
 	const bg = CategoryToColor[item.category]
-
-	const changeVisible = () => {
-		setVisible(prev => !prev)
-	}
 
 	const changeKeyboardVisible = () => {
 		setKeyboardVisible(prev => !prev)
@@ -43,16 +43,18 @@ const ExpenseModal: FC<ExpenseModalProps> = ({
 		setSelected(null)
 	}
 
-	const handleChangeCategory = (newCategory: string) => {
-		const newItem = { ...item, category: newCategory as Categories }
-		AsyncStorageService.updateExpense(item, newItem)
-		updateExpense(item, newItem)
-		setSelected(newItem)
-	}
+	const handleChangeCategory = React.useCallback(
+		(newCategory: string) => {
+			const newItem = { ...item, category: newCategory as Categories }
+			AsyncStorageService.updateExpense(item, newItem)
+			updateExpense(item, newItem)
+			setSelected(newItem)
+		},
+		[item]
+	)
 
 	const handleConfirm = () => {
 		const newItem = { ...item, expense: convertTonNumber(expense) }
-		console.log(newItem)
 		AsyncStorageService.updateExpense(item, newItem)
 		updateExpense(item, newItem)
 		setSelected(newItem)
@@ -85,7 +87,7 @@ const ExpenseModal: FC<ExpenseModalProps> = ({
 				<CategorySelector
 					item={item}
 					changeCategory={handleChangeCategory}
-					style={{ marginTop: 12 }}
+					style={SelectorStyles}
 				/>
 				<Text style={styles.date}>{formatDate(item.date)}</Text>
 				<View style={styles.currency_container}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
 import ExpenseBlock from '../components/ExpenseBlock'
@@ -20,18 +20,24 @@ const Home = () => {
 		null
 	)
 
-	const getData = async (): Promise<void> => {
-		const data = await AsyncStorageService.getExpenses()
-		setExpenses(data)
-		setLoading(false)
-	}
+	const groupedExpenses = React.useMemo(
+		() => formatArray(expenses) as UnspecifiedObject,
+		[expenses]
+	)
 
 	useEffect(() => {
+		const getData = async (): Promise<void> => {
+			const data = await AsyncStorageService.getExpenses()
+			setExpenses(data)
+			setLoading(false)
+		}
+
 		getData()
 	}, [])
 
-	useLayoutEffect(() => {
-		setExpensesByDay(calculateExpenses(expenses))
+	useMemo(() => {
+		const newExpensesByDay = calculateExpenses(expenses)
+		setExpensesByDay(newExpensesByDay)
 	}, [expenses])
 
 	const handleChangeVisible = () => {
@@ -50,11 +56,6 @@ const Home = () => {
 		})
 		setExpenses(newExpenses)
 	}
-
-	const groupedExpenses = React.useMemo(
-		() => formatArray(expenses) as UnspecifiedObject,
-		[expenses]
-	)
 
 	return (
 		<View style={styles.main_container}>

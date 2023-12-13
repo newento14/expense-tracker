@@ -36,10 +36,13 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 	}
 
 	const handleCategoryChange = (newCategory: string) => {
+		if (newCategory === state.category) {
+			return
+		}
 		setState(prev => ({ ...prev, category: newCategory as Categories }))
 	}
 
-	const handleConfirm = () => {
+	const handleConfirm = React.useCallback(() => {
 		if (expense === '$0' || expense === '$') {
 			return
 		}
@@ -50,7 +53,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 		AsyncStorageService.addExpense(newExpense)
 		pushNewExpense(newExpense)
 		handleClose()
-	}
+	}, [expense])
 
 	return (
 		<Modal
