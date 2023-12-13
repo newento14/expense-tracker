@@ -4,6 +4,12 @@ export const convertToCurrency = (price: number) =>
 		currency: 'USD',
 	}).format(price)
 
+export const convertTonNumber = (price: string) => {
+	const value = price.replace(/[^0-9.-]+/g, '')
+	console.log('🚀 ~ file: format.ts:9 ~ convertTonNumber ~ value:', value)
+	return Number(value)
+}
+
 export function formatDate(inputDate: string) {
 	const months = [
 		'January',

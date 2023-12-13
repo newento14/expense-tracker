@@ -3,10 +3,10 @@ import { StyleSheet, Text, TextInput, View } from 'react-native'
 import Modal from 'react-native-modal'
 import { Categories, IExpense } from '../types/expenses'
 
-import { Ionicons } from '@expo/vector-icons'
 import AsyncStorageService from '../utils/asyncStorageService'
-import AddNewModalButton from './AddNewModalButton'
+import { convertTonNumber } from '../utils/format'
 import CategorySelect from './CategorySelector'
+import Keyboard from './Keyboard'
 
 const InitialObject: IExpense = {
 	category: Categories.Other,
@@ -14,13 +14,6 @@ const InitialObject: IExpense = {
 	date: new Date().toLocaleDateString('en-GB'),
 	comment: '',
 }
-
-const buttons: string[][] = [
-	['1', '2', '3'],
-	['4', '5', '6'],
-	['7', '8', '9'],
-	['.', '0'],
-]
 
 interface AddNewModalProps {
 	modalVisible: boolean
@@ -34,11 +27,11 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 	pushNewExpense,
 }) => {
 	const [state, setState] = useState<IExpense>(InitialObject)
-	const [expense, setExpense] = useState<string>('0')
+	const [expense, setExpense] = useState<string>('$0')
 
 	const handleClose = () => {
 		setState(InitialObject)
-		setExpense('0')
+		setExpense('$0')
 		handleChangeVisible()
 	}
 
@@ -46,39 +39,13 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 		setState(prev => ({ ...prev, category: newCategory as Categories }))
 	}
 
-	const handleButtonPress = (value: string) =>
-		React.useCallback(() => {
-			setExpense(prevValue => {
-				if (prevValue === '0') {
-					return value
-				}
-
-				if (value === '.' && prevValue.indexOf('.') === -1) {
-					return prevValue + value
-				}
-				if (prevValue.lastIndexOf('.') === -1) {
-					if (prevValue.length > 5) {
-						return prevValue
-					}
-					return prevValue + value
-				} else if (prevValue.length > 8) {
-					return prevValue
-				}
-				return prevValue + value
-			})
-		}, [])
-
-	const handleRemoveLast = React.useCallback(() => {
-		setExpense(prevValue => prevValue.slice(0, -1))
-	}, [])
-
 	const handleConfirm = () => {
-		if (expense === '0' || expense === '') {
+		if (expense === '$0' || expense === '$') {
 			return
 		}
 		const newExpense: IExpense = {
 			...state,
-			expense: parseFloat(expense),
+			expense: convertTonNumber(expense),
 		}
 		AsyncStorageService.addExpense(newExpense)
 		pushNewExpense(newExpense)
@@ -105,7 +72,6 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 						alignItems: 'flex-end',
 					}}
 				>
-					<Text style={{ fontSize: 18 }}>$</Text>
 					<Text style={{ fontWeight: 'bold', fontSize: 36, height: '85%' }}>
 						{expense}
 					</Text>
@@ -116,68 +82,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 					value={state.comment}
 					onChangeText={text => setState(prev => ({ ...prev, comment: text }))}
 				/>
-				<View style={styles.grid}>
-					<View style={styles.row}>
-						{buttons[0].map((item, index) => (
-							<AddNewModalButton
-								key={index}
-								title={item}
-								handleButtonPress={handleButtonPress(item)}
-							/>
-						))}
-						<AddNewModalButton
-							title={
-								<Ionicons name='backspace-outline' size={24} color='black' />
-							}
-							handleButtonPress={handleRemoveLast}
-							style={{ backgroundColor: '#ffe0d7' }}
-						/>
-					</View>
-					<View style={styles.row}>
-						{buttons[1].map((item, index) => (
-							<AddNewModalButton
-								key={index}
-								title={item}
-								handleButtonPress={handleButtonPress(item)}
-							/>
-						))}
-						<AddNewModalButton
-							title={
-								<Ionicons name='md-calendar-sharp' size={24} color='black' />
-							}
-							style={{ backgroundColor: '#e0ebfe' }}
-							handleButtonPress={() => {}}
-						/>
-					</View>
-					<View style={styles.row}>
-						{buttons[2].map((item, index) => (
-							<AddNewModalButton
-								key={index}
-								title={item}
-								handleButtonPress={handleButtonPress(item)}
-							/>
-						))}
-						<AddNewModalButton
-							title={'$'}
-							handleButtonPress={() => {}}
-							style={{ backgroundColor: '#fff8da' }}
-						/>
-					</View>
-					<View style={styles.row}>
-						{buttons[3].map((item, index) => (
-							<AddNewModalButton
-								key={index}
-								title={item}
-								handleButtonPress={handleButtonPress(item)}
-							/>
-						))}
-						<AddNewModalButton
-							title={<Ionicons name='checkmark' size={36} color='white' />}
-							handleButtonPress={handleConfirm}
-							style={styles.confirmButton}
-						/>
-					</View>
-				</View>
+				<Keyboard setExpense={setExpense} handleConfirm={handleConfirm} />
 			</View>
 		</Modal>
 	)
@@ -192,27 +97,6 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-	},
-	grid: {
-		display: 'flex',
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'center',
-		alignItems: 'center',
-		margin: 'auto',
-		height: '60%',
-	},
-	row: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		width: '90%',
-		height: '25%',
-	},
-	confirmButton: {
-		width: '46%',
-		backgroundColor: 'black',
 	},
 	swipe_line_container: {
 		width: '100%',

@@ -1,13 +1,13 @@
 import { FC, memo } from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
-interface AddNewModalButtonProps {
+interface KeyboardButtonProps {
 	title: string | React.JSX.Element
 	handleButtonPress: () => void
 	style?: object
 }
 
-const AddNewModalButton: FC<AddNewModalButtonProps> = memo(
+const KeyboardButton: FC<KeyboardButtonProps> = memo(
 	({ title, handleButtonPress, style = {} }) => {
 		return (
 			<TouchableOpacity
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default AddNewModalButton
+export default KeyboardButton
