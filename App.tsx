@@ -1,16 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Expenses from './src/screens/Expenses'
 import Home from './src/screens/Home'
 
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'react-native'
 
-const Stack = createNativeStackNavigator()
 const BottomTab = createBottomTabNavigator()
-
-function ExpensesOverview() {}
 
 export default function App() {
 	return (
