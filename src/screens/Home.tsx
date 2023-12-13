@@ -57,7 +57,7 @@ const Home = () => {
 	)
 
 	return (
-		<>
+		<View style={styles.main_container}>
 			<Button title={'add'} onPress={handleChangeVisible} />
 			<AddNewModal
 				modalVisible={modalVisible}
@@ -93,11 +93,15 @@ const Home = () => {
 				expenses={groupedExpenses}
 				setSelected={setSelectedExpense}
 			/>
-		</>
+		</View>
 	)
 }
 
 const styles = StyleSheet.create({
+	main_container: {
+		flex: 1,
+		backgroundColor: '#fff',
+	},
 	empty_list_container: {
 		width: '100%',
 		height: '50%',

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#f2f2f2',
+		backgroundColor: '#fff',
 	},
 	header_text: {
 		fontSize: 14,

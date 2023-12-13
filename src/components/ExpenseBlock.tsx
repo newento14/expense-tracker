@@ -1,5 +1,6 @@
 import { FC, memo } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import { convertToCurrency } from '../utils/format'
 
 interface ExpenseBlockProps {
 	isLoading: boolean
@@ -13,12 +14,11 @@ const ExpenseBlock: FC<ExpenseBlockProps> = memo(
 			<View style={styles.expense_block}>
 				<Text style={{ textAlign: 'center' }}>{title}</Text>
 				<View style={styles.currency}>
-					<Text>$</Text>
 					{isLoading ? (
-						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
+						<Text style={{ fontWeight: 'bold', fontSize: 22 }}>...</Text>
 					) : (
-						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-							{expense >= 10000 ? Math.floor(expense) : expense}
+						<Text style={{ fontWeight: 'bold', fontSize: 22 }}>
+							{convertToCurrency(expense).split('.')[0]}
 						</Text>
 					)}
 				</View>
@@ -29,7 +29,7 @@ const ExpenseBlock: FC<ExpenseBlockProps> = memo(
 
 const styles = StyleSheet.create({
 	expense_block: {
-		backgroundColor: '#fff',
+		backgroundColor: '#f5f5f5',
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
