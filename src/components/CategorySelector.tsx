@@ -8,8 +8,8 @@ import {
 	View,
 } from 'react-native'
 import Modal from 'react-native-modal'
-import { IExpense } from '../../types/expenses'
-import { CategoryToColor } from '../../utils/CategoryToIcon'
+import { IExpense } from '../types/expenses'
+import { CategoryToColor } from '../utils/CategoryToIcon'
 
 const categories = [
 	{ label: '🍗 Food', value: 'Food' },
@@ -25,13 +25,13 @@ const categories = [
 interface CategorySelectorProps {
 	item: IExpense
 	changeCategory: (newCategory: string) => void
-	styles?: object
+	style?: object
 }
 
 const CategorySelector: FC<CategorySelectorProps> = ({
 	item,
 	changeCategory,
-	styles = {},
+	style = {},
 }) => {
 	const [visible, setVisible] = React.useState(false)
 	const bg = CategoryToColor[item.category]
@@ -46,10 +46,10 @@ const CategorySelector: FC<CategorySelectorProps> = ({
 
 	return (
 		<>
-			<View style={{ width: '100%', ...styles, marginBottom: 12 }}>
-				<View style={selectStyles.line} />
+			<View style={{ width: '100%', ...style, marginBottom: 12 }}>
+				<View style={styles.line} />
 				<TouchableOpacity
-					style={[selectStyles.category, { backgroundColor: bg }]}
+					style={[styles.category, { backgroundColor: bg }]}
 					activeOpacity={0.6}
 					onPress={changeVisible}
 				>
@@ -60,22 +60,22 @@ const CategorySelector: FC<CategorySelectorProps> = ({
 				</TouchableOpacity>
 			</View>
 			<Modal
-				style={selectStyles.modal}
+				style={styles.modal}
 				isVisible={visible}
 				onBackdropPress={handleClose}
 			>
-				<View style={selectStyles.content}>
+				<View style={styles.content}>
 					<FlatList
 						data={categories}
 						renderItem={({ item }) => (
 							<TouchableOpacity
-								style={selectStyles.item}
+								style={styles.item}
 								onPress={() => {
 									changeCategory(item.value)
 									changeVisible()
 								}}
 							>
-								<Text style={selectStyles.text}>{item.label}</Text>
+								<Text style={styles.text}>{item.label}</Text>
 							</TouchableOpacity>
 						)}
 					/>
@@ -85,7 +85,7 @@ const CategorySelector: FC<CategorySelectorProps> = ({
 	)
 }
 
-const selectStyles = StyleSheet.create({
+const styles = StyleSheet.create({
 	modal: {
 		display: 'flex',
 		justifyContent: 'center',

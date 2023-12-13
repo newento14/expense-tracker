@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 interface ExpenseBlockProps {
@@ -7,21 +7,26 @@ interface ExpenseBlockProps {
 	expense: number
 }
 
-const ExpenseBlock: FC<ExpenseBlockProps> = ({ isLoading, title, expense }) => {
-	return (
-		<View style={styles.expense_block}>
-			<Text style={{ textAlign: 'center' }}>{title}</Text>
-			<View style={styles.currency}>
-				<Text>$</Text>
-				{isLoading ? (
-					<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
-				) : (
-					<Text style={{ fontWeight: 'bold', fontSize: 24 }}>{expense}</Text>
-				)}
+const ExpenseBlock: FC<ExpenseBlockProps> = memo(
+	({ isLoading, title, expense }) => {
+		console.log('ExpenseBlock')
+		return (
+			<View style={styles.expense_block}>
+				<Text style={{ textAlign: 'center' }}>{title}</Text>
+				<View style={styles.currency}>
+					<Text>$</Text>
+					{isLoading ? (
+						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
+					) : (
+						<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
+							{expense >= 10000 ? Math.floor(expense) : expense}
+						</Text>
+					)}
+				</View>
 			</View>
-		</View>
-	)
-}
+		)
+	}
+)
 
 const styles = StyleSheet.create({
 	expense_block: {

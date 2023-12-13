@@ -5,7 +5,7 @@ import { Categories, IExpense } from '../types/expenses'
 import { CategoryToColor, CategoryToIcon } from '../utils/CategoryToIcon'
 import AsyncStorageService from '../utils/asyncStorageService'
 import { convertToCurrency, formatDate } from '../utils/format'
-import CategorySelector from './utils/CategorySelector'
+import CategorySelector from './CategorySelector'
 
 interface ExpenseModalProps {
 	item: IExpense
@@ -62,7 +62,7 @@ const ExpenseModal: FC<ExpenseModalProps> = ({
 				<CategorySelector
 					item={item}
 					changeCategory={handleChangeCategory}
-					styles={{ marginTop: 12 }}
+					style={{ marginTop: 12 }}
 				/>
 				<Text style={styles.date}>{formatDate(item.date)}</Text>
 				<Text style={styles.currency}>-{convertToCurrency(item.expense)}</Text>

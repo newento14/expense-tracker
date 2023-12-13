@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { Button, StyleSheet, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
@@ -6,10 +5,7 @@ import ExpenseBlock from '../components/ExpenseBlock'
 import ExpenseModal from '../components/ExpenseModal'
 import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
-import {
-	default as AsyncStorageService,
-	default as asyncStorageService,
-} from '../utils/asyncStorageService'
+import AsyncStorageService from '../utils/asyncStorageService'
 import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
@@ -23,11 +19,9 @@ const Home = () => {
 	const [selectedExpense, setSelectedExpense] = React.useState<IExpense | null>(
 		null
 	)
-	const [expenseModalVisible, setExpenseModalVisible] = React.useState(false)
 
 	const getData = async (): Promise<void> => {
 		const data = await AsyncStorageService.getExpenses()
-		setExpensesByDay(calculateExpenses(data))
 		setExpenses(data)
 		setLoading(false)
 	}
@@ -50,19 +44,11 @@ const Home = () => {
 
 	const handleUpdateExpense = (oldExpense: IExpense, newExpense: IExpense) => {
 		const newExpenses = expenses.map(expense => {
-			return asyncStorageService.compareExpense(expense, oldExpense)
+			return AsyncStorageService.compareExpense(expense, oldExpense)
 				? newExpense
 				: expense
 		})
 		setExpenses(newExpenses)
-	}
-
-	const handleClearStorage = async () => {
-		try {
-			await AsyncStorage.removeItem('expenses')
-		} catch (e) {
-			console.error(e)
-		}
 	}
 
 	const groupedExpenses = React.useMemo(
@@ -73,7 +59,6 @@ const Home = () => {
 	return (
 		<>
 			<Button title={'add'} onPress={handleChangeVisible} />
-			<Button title={'clear'} onPress={handleClearStorage} />
 			<AddNewModal
 				modalVisible={modalVisible}
 				handleChangeVisible={handleChangeVisible}

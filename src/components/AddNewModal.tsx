@@ -1,17 +1,12 @@
 import React, { useState } from 'react'
-import {
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import Modal from 'react-native-modal'
 import { Categories, IExpense } from '../types/expenses'
 
 import { Ionicons } from '@expo/vector-icons'
 import AsyncStorageService from '../utils/asyncStorageService'
-import CategorySelect from './utils/CategorySelector'
+import AddNewModalButton from './AddNewModalButton'
+import CategorySelect from './CategorySelector'
 
 const InitialObject: IExpense = {
 	category: Categories.Other,
@@ -19,6 +14,13 @@ const InitialObject: IExpense = {
 	date: new Date().toLocaleDateString('en-GB'),
 	comment: '',
 }
+
+const buttons: string[][] = [
+	['1', '2', '3'],
+	['4', '5', '6'],
+	['7', '8', '9'],
+	['.', '0'],
+]
 
 interface AddNewModalProps {
 	modalVisible: boolean
@@ -33,11 +35,6 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 }) => {
 	const [state, setState] = useState<IExpense>(InitialObject)
 	const [expense, setExpense] = useState<string>('0')
-	const [selectorVisible, setSelectorVisible] = useState(false)
-
-	const handleSelectorVisible = () => {
-		setSelectorVisible(prev => !prev)
-	}
 
 	const handleClose = () => {
 		setState(InitialObject)
@@ -55,7 +52,12 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 			return
 		}
 		setExpense(prevValue => {
-			if (prevValue.length > 5) return prevValue
+			if (prevValue.lastIndexOf('.') === -1) {
+				return prevValue
+			}
+			if (prevValue.length > 7) {
+				return prevValue
+			}
 			return prevValue + value
 		})
 	}
@@ -100,122 +102,71 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 					</Text>
 				</View>
 				<TextInput
-					style={{ margin: 5 }}
+					style={{ margin: 5, textAlign: 'center' }}
 					placeholder={'Add comment'}
 					value={state.comment}
 					onChangeText={text => setState(prev => ({ ...prev, comment: text }))}
 				/>
 				<View style={styles.grid}>
 					<View style={styles.row}>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('1')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>1</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('2')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>2</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('3')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>3</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={handleRemoveLast}
-							style={[styles.button, { backgroundColor: '#ffe0d7' }]}
-						>
-							<Ionicons name='backspace' size={24} color='black' />
-						</TouchableOpacity>
+						{buttons[0].map((item, index) => (
+							<AddNewModalButton
+								key={index}
+								title={item}
+								handleButtonPress={() => handleButtonPress(item)}
+							/>
+						))}
+						<AddNewModalButton
+							title={
+								<Ionicons name='backspace-outline' size={24} color='black' />
+							}
+							handleButtonPress={handleRemoveLast}
+							style={{ backgroundColor: '#ffe0d7' }}
+						/>
 					</View>
 					<View style={styles.row}>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('4')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>4</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('5')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>5</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('6')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>6</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							style={[styles.button, { backgroundColor: '#e0ebfe' }]}
-						>
-							<Ionicons name='md-calendar-sharp' size={24} color='black' />
-						</TouchableOpacity>
+						{buttons[1].map((item, index) => (
+							<AddNewModalButton
+								key={index}
+								title={item}
+								handleButtonPress={() => handleButtonPress(item)}
+							/>
+						))}
+						<AddNewModalButton
+							title={
+								<Ionicons name='md-calendar-sharp' size={24} color='black' />
+							}
+							style={{ backgroundColor: '#e0ebfe' }}
+							handleButtonPress={() => {}}
+						/>
 					</View>
 					<View style={styles.row}>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('7')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>7</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('8')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>8</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('9')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>9</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							style={[styles.button, { backgroundColor: '#fff8da' }]}
-						>
-							<Text style={styles.buttonText}>$</Text>
-						</TouchableOpacity>
+						{buttons[2].map((item, index) => (
+							<AddNewModalButton
+								key={index}
+								title={item}
+								handleButtonPress={() => handleButtonPress(item)}
+							/>
+						))}
+						<AddNewModalButton
+							title={'$'}
+							handleButtonPress={() => {}}
+							style={{ backgroundColor: '#fff8da' }}
+						/>
 					</View>
 					<View style={styles.row}>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('.')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>.</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={() => handleButtonPress('0')}
-							style={styles.button}
-						>
-							<Text style={styles.buttonText}>0</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.6}
-							onPress={handleConfirm}
-							style={[styles.button, styles.confirmButton]}
-						>
-							<Ionicons name='checkmark' size={36} color='white' />
-						</TouchableOpacity>
+						{buttons[3].map((item, index) => (
+							<AddNewModalButton
+								key={index}
+								title={item}
+								handleButtonPress={() => handleButtonPress(item)}
+							/>
+						))}
+						<AddNewModalButton
+							title={<Ionicons name='checkmark' size={36} color='white' />}
+							handleButtonPress={handleConfirm}
+							style={styles.confirmButton}
+						/>
 					</View>
 				</View>
 			</View>
@@ -249,19 +200,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		width: '90%',
 		height: '25%',
-	},
-	button: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		width: '20%',
-		height: '80%',
-		borderRadius: 20,
-		backgroundColor: '#f5f5f5',
-	},
-	buttonText: {
-		fontSize: 24,
-		fontWeight: 'bold',
 	},
 	confirmButton: {
 		width: '46%',
