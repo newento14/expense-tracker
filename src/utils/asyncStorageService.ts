@@ -60,7 +60,7 @@ export default class AsyncStorageService {
 		}
 	}
 
-	private static compareExpense(item1: IExpense, item2: IExpense): boolean {
+	static compareExpense(item1: IExpense, item2: IExpense): boolean {
 		for (const key in item1) {
 			if (item1[key] !== item2[key]) {
 				return false

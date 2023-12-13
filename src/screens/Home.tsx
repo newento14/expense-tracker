@@ -5,7 +5,10 @@ import AddNewModal from '../components/AddNewModal'
 import ExpenseModal from '../components/ExpenseModal'
 import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
-import AsyncStorageService from '../utils/asyncStorage'
+import {
+	default as AsyncStorageService,
+	default as asyncStorageService,
+} from '../utils/asyncStorageService'
 import { calculateExpenses, formatArray } from '../utils/calculate'
 
 type UnspecifiedObject = Record<string, IExpense[]>
@@ -20,8 +23,6 @@ const Home = () => {
 		null
 	)
 	const [expenseModalVisible, setExpenseModalVisible] = React.useState(false)
-
-	console.log(selectedExpense)
 
 	const getData = async (): Promise<void> => {
 		const data = await AsyncStorageService.getExpenses()
@@ -44,6 +45,15 @@ const Home = () => {
 
 	const handleAddExpense = (expense: IExpense) => {
 		setExpenses(prev => [expense, ...prev])
+	}
+
+	const handleUpdateExpense = (oldExpense: IExpense, newExpense: IExpense) => {
+		const newExpenses = expenses.map(expense => {
+			return asyncStorageService.compareExpense(expense, oldExpense)
+				? newExpense
+				: expense
+		})
+		setExpenses(newExpenses)
 	}
 
 	const handleClearStorage = async () => {
@@ -69,8 +79,7 @@ const Home = () => {
 				<ExpenseModal
 					item={selectedExpense}
 					setSelected={setSelectedExpense}
-					visible={true}
-					setVisible={() => setExpenseModalVisible(prev => !prev)}
+					updateExpense={handleUpdateExpense}
 				/>
 			)}
 			<View style={styles.expense_block_list}>

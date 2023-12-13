@@ -10,8 +10,8 @@ import Modal from 'react-native-modal'
 import { Categories, IExpense } from '../types/expenses'
 
 import { Ionicons } from '@expo/vector-icons'
-import AsyncStorageService from '../utils/asyncStorage'
-import CategorySelect from './utils/CategorySelect'
+import AsyncStorageService from '../utils/asyncStorageService'
+import CategorySelect from './utils/CategorySelector'
 
 const InitialObject: IExpense = {
 	category: Categories.Other,
@@ -33,6 +33,11 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 }) => {
 	const [state, setState] = useState<IExpense>(InitialObject)
 	const [expense, setExpense] = useState<string>('0')
+	const [selectorVisible, setSelectorVisible] = useState(false)
+
+	const handleSelectorVisible = () => {
+		setSelectorVisible(prev => !prev)
+	}
 
 	const handleClose = () => {
 		setState(InitialObject)
@@ -80,7 +85,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 				<View style={styles.swipe_line_container}>
 					<View style={styles.swipe_line} />
 				</View>
-				<CategorySelect handleCategoryChange={handleCategoryChange} />
+				<CategorySelect item={state} changeCategory={handleCategoryChange} />
 				<Text style={{ opacity: 0.6 }}>Expenses</Text>
 				<View
 					style={{

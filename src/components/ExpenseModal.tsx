@@ -1,22 +1,29 @@
-import { AntDesign } from '@expo/vector-icons'
 import React, { FC } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Modal from 'react-native-modal'
 import { Categories, IExpense } from '../types/expenses'
 import { CategoryToColor, CategoryToIcon } from '../utils/CategoryToIcon'
-import AsyncStorageService from '../utils/asyncStorage'
+import AsyncStorageService from '../utils/asyncStorageService'
 import { convertToCurrency, formatDate } from '../utils/format'
-import CategorySelect from './utils/CategorySelect'
+import CategorySelector from './utils/CategorySelector'
 
 interface ExpenseModalProps {
 	item: IExpense
 	setSelected: (item: IExpense | null) => void
-	visible: boolean
-	setVisible: () => void
+	updateExpense: (oldExpense: IExpense, newExpense: IExpense) => void
 }
 
-const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
+const ExpenseModal: FC<ExpenseModalProps> = ({
+	item,
+	setSelected,
+	updateExpense,
+}) => {
+	const [visible, setVisible] = React.useState(false)
 	const bg = CategoryToColor[item.category]
+
+	const changeVisible = () => {
+		setVisible(prev => !prev)
+	}
 
 	const handleClose = () => {
 		setSelected(null)
@@ -25,6 +32,7 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 	const handleChangeCategory = (newCategory: string) => {
 		const newItem = { ...item, category: newCategory as Categories }
 		AsyncStorageService.updateExpense(item, newItem)
+		updateExpense(item, newItem)
 		setSelected(newItem)
 	}
 
@@ -51,20 +59,11 @@ const ExpenseModal: FC<ExpenseModalProps> = ({ item, setSelected }) => {
 				) : (
 					<Text style={styles.comment}>No comment</Text>
 				)}
-				<View style={{ width: '100%', marginTop: 11 }}>
-					<View style={styles.line} />
-					<TouchableOpacity
-						style={[styles.category, { backgroundColor: bg }]}
-						activeOpacity={0.4}
-						onPress={() => {}}
-					>
-						<Text style={{ fontSize: 15, fontWeight: '500' }}>
-							{item.category}
-						</Text>
-						<AntDesign name='edit' size={16} color='black' />
-					</TouchableOpacity>
-					<CategorySelect handleCategoryChange={handleChangeCategory} />
-				</View>
+				<CategorySelector
+					item={item}
+					changeCategory={handleChangeCategory}
+					styles={{ marginTop: 12 }}
+				/>
 				<Text style={styles.date}>{formatDate(item.date)}</Text>
 				<Text style={styles.currency}>-{convertToCurrency(item.expense)}</Text>
 			</View>
@@ -121,23 +120,6 @@ const styles = StyleSheet.create({
 	},
 	comment: {
 		marginTop: 15,
-	},
-	line: {
-		width: '100%',
-		height: 1,
-		backgroundColor: 'gray',
-		marginTop: 15,
-	},
-	category: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'flex-end',
-		position: 'absolute',
-		alignSelf: 'center',
-		borderRadius: 20,
-		paddingHorizontal: 12,
-		paddingVertical: 3,
-		gap: 5,
 	},
 	date: {
 		fontSize: 16,
