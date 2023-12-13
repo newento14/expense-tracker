@@ -73,6 +73,9 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 	}, [])
 
 	const handleConfirm = () => {
+		if (expense === '0' || expense === '') {
+			return
+		}
 		const newExpense: IExpense = {
 			...state,
 			expense: parseFloat(expense),

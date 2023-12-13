@@ -67,6 +67,7 @@ const CategorySelector: FC<CategorySelectorProps> = ({
 				<View style={styles.content}>
 					<FlatList
 						data={categories}
+						ItemSeparatorComponent={() => <View style={styles.separator} />}
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								style={styles.item}
@@ -98,6 +99,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		maxHeight: '60%',
 		width: '80%',
+		borderRadius: 20,
+		padding: 5,
 	},
 	item: {
 		display: 'flex',
@@ -128,6 +131,12 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 12,
 		paddingVertical: 3,
 		gap: 5,
+	},
+	separator: {
+		marginVertical: 2,
+		height: 1,
+		width: '100%',
+		backgroundColor: '#ccc',
 	},
 })
 

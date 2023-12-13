@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { IExpense } from '../types/expenses'
 import { CategoryToIcon } from '../utils/CategoryToIcon'
+import { convertToCurrency } from '../utils/format'
 
 interface ExpensesListItemProps {
 	item: IExpense
@@ -9,6 +10,11 @@ interface ExpensesListItemProps {
 }
 
 const ExpensesListItem: FC<ExpensesListItemProps> = ({ item, setSelected }) => {
+	let expense = convertToCurrency(item.expense)
+	if (expense.endsWith('.00')) {
+		expense = expense.slice(0, -3)
+	}
+
 	return (
 		<TouchableOpacity style={styles.item} onPress={() => setSelected(item)}>
 			<CategoryToIcon category={item.category} />
@@ -33,15 +39,14 @@ const ExpensesListItem: FC<ExpensesListItemProps> = ({ item, setSelected }) => {
 						height: '100%',
 					}}
 				>
-					<Text style={{ height: '55%' }}>$</Text>
 					<Text
 						style={{
 							fontWeight: 'bold',
-							fontSize: 26,
+							fontSize: 23,
 							height: '100%',
 						}}
 					>
-						{item.expense}
+						{expense}
 					</Text>
 				</View>
 			</View>

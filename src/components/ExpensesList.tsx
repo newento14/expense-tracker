@@ -38,8 +38,11 @@ const ExpensesList: FC<ExpensesListProps> = memo(
 					renderItem={({ item }) => (
 						<ExpensesListItem item={item} setSelected={setSelected} />
 					)}
+					stickySectionHeadersEnabled={true}
 					renderSectionHeader={({ section: { title } }) => (
-						<Text style={styles.header}>{title}</Text>
+						<View style={styles.header}>
+							<Text style={styles.header_text}>{title}</Text>
+						</View>
 					)}
 				/>
 			</SafeAreaView>
@@ -54,7 +57,14 @@ const styles = StyleSheet.create({
 		marginHorizontal: 16,
 	},
 	header: {
-		alignSelf: 'center',
+		width: '100%',
+		height: 40,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#f2f2f2',
+	},
+	header_text: {
 		fontSize: 14,
 		fontWeight: 'bold',
 		opacity: 0.5,
