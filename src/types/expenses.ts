@@ -18,7 +18,7 @@ export enum Categories {
 }
 
 export interface IExpenseByDate {
-	Today: number
+	today: number
 	'7d': number
 	'30d': number
 }

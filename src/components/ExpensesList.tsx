@@ -19,8 +19,6 @@ interface ExpensesListProps {
 
 const ExpensesList: FC<ExpensesListProps> = memo(
 	({ expenses, setSelected, isLoading }) => {
-		console.log('ExpensesList')
-
 		return isLoading ? (
 			<View style={styles.empty_list_container}>
 				<ActivityIndicator size={'large'} />

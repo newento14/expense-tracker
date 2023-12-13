@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useLayoutEffect } from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
+import ExpenseBlock from '../components/ExpenseBlock'
 import ExpenseModal from '../components/ExpenseModal'
 import ExpensesList from '../components/ExpensesList'
 import { IExpense, IExpenseByDate } from '../types/expenses'
@@ -86,45 +87,21 @@ const Home = () => {
 				/>
 			)}
 			<View style={styles.expense_block_list}>
-				<View style={styles.expense_block}>
-					<Text style={{ textAlign: 'center' }}>Day</Text>
-					<View style={styles.currency}>
-						<Text>$</Text>
-						{loading ? (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
-						) : (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-								{expensesByDay.Today}
-							</Text>
-						)}
-					</View>
-				</View>
-				<View style={styles.expense_block}>
-					<Text style={{ textAlign: 'center' }}>Week</Text>
-					<View style={styles.currency}>
-						<Text>$</Text>
-						{loading ? (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
-						) : (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-								{expensesByDay['7d']}
-							</Text>
-						)}
-					</View>
-				</View>
-				<View style={styles.expense_block}>
-					<Text style={{ textAlign: 'center' }}>Month</Text>
-					<View style={styles.currency}>
-						<Text>$</Text>
-						{loading ? (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>...</Text>
-						) : (
-							<Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-								{expensesByDay['30d']}
-							</Text>
-						)}
-					</View>
-				</View>
+				<ExpenseBlock
+					isLoading={loading}
+					title={'Today'}
+					expense={expensesByDay.today}
+				/>
+				<ExpenseBlock
+					isLoading={loading}
+					title={'Week'}
+					expense={expensesByDay['7d']}
+				/>
+				<ExpenseBlock
+					isLoading={loading}
+					title={'Month'}
+					expense={expensesByDay['30d']}
+				/>
 			</View>
 			<ExpensesList
 				isLoading={loading}
@@ -153,23 +130,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingRight: 20,
 		marginTop: 20,
-	},
-	expense_block: {
-		backgroundColor: '#fff',
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'center',
-		alignItems: 'center',
-		padding: 15,
-		borderRadius: 22,
-		minWidth: '27%',
-	},
-	currency: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		alignItems: 'flex-end',
-		height: '41%',
 	},
 })
 

@@ -24,7 +24,7 @@ export const calculateExpenses = (expenses: IExpense[]): IExpenseByDate => {
 	})
 
 	return {
-		Today: today,
+		today: today,
 		'7d': sevenDays,
 		'30d': thirtyDays,
 	}
