@@ -9,7 +9,6 @@ interface ExpenseBlockProps {
 
 const ExpenseBlock: FC<ExpenseBlockProps> = memo(
 	({ isLoading, title, expense }) => {
-		console.log('ExpenseBlock')
 		return (
 			<View style={styles.expense_block}>
 				<Text style={{ textAlign: 'center' }}>{title}</Text>

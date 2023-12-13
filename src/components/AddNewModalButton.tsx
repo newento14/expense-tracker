@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 interface AddNewModalButtonProps {
@@ -7,21 +7,19 @@ interface AddNewModalButtonProps {
 	style?: object
 }
 
-const AddNewModalButton: FC<AddNewModalButtonProps> = ({
-	title,
-	handleButtonPress,
-	style = {},
-}) => {
-	return (
-		<TouchableOpacity
-			activeOpacity={0.6}
-			onPress={handleButtonPress}
-			style={[styles.button, style]}
-		>
-			<Text style={styles.buttonText}>{title}</Text>
-		</TouchableOpacity>
-	)
-}
+const AddNewModalButton: FC<AddNewModalButtonProps> = memo(
+	({ title, handleButtonPress, style = {} }) => {
+		return (
+			<TouchableOpacity
+				activeOpacity={0.6}
+				onPress={handleButtonPress}
+				style={[styles.button, style]}
+			>
+				<Text style={styles.buttonText}>{title}</Text>
+			</TouchableOpacity>
+		)
+	}
+)
 
 const styles = StyleSheet.create({
 	button: {

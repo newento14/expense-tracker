@@ -46,25 +46,31 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 		setState(prev => ({ ...prev, category: newCategory as Categories }))
 	}
 
-	const handleButtonPress = (value: string) => {
-		if (expense === '0') {
-			setExpense(value)
-			return
-		}
-		setExpense(prevValue => {
-			if (prevValue.lastIndexOf('.') === -1) {
-				return prevValue
-			}
-			if (prevValue.length > 7) {
-				return prevValue
-			}
-			return prevValue + value
-		})
-	}
+	const handleButtonPress = (value: string) =>
+		React.useCallback(() => {
+			setExpense(prevValue => {
+				if (prevValue === '0') {
+					return value
+				}
 
-	const handleRemoveLast = () => {
+				if (value === '.' && prevValue.indexOf('.') === -1) {
+					return prevValue + value
+				}
+				if (prevValue.lastIndexOf('.') === -1) {
+					if (prevValue.length > 5) {
+						return prevValue
+					}
+					return prevValue + value
+				} else if (prevValue.length > 8) {
+					return prevValue
+				}
+				return prevValue + value
+			})
+		}, [])
+
+	const handleRemoveLast = React.useCallback(() => {
 		setExpense(prevValue => prevValue.slice(0, -1))
-	}
+	}, [])
 
 	const handleConfirm = () => {
 		const newExpense: IExpense = {
@@ -113,7 +119,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 							<AddNewModalButton
 								key={index}
 								title={item}
-								handleButtonPress={() => handleButtonPress(item)}
+								handleButtonPress={handleButtonPress(item)}
 							/>
 						))}
 						<AddNewModalButton
@@ -129,7 +135,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 							<AddNewModalButton
 								key={index}
 								title={item}
-								handleButtonPress={() => handleButtonPress(item)}
+								handleButtonPress={handleButtonPress(item)}
 							/>
 						))}
 						<AddNewModalButton
@@ -145,7 +151,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 							<AddNewModalButton
 								key={index}
 								title={item}
-								handleButtonPress={() => handleButtonPress(item)}
+								handleButtonPress={handleButtonPress(item)}
 							/>
 						))}
 						<AddNewModalButton
@@ -159,7 +165,7 @@ const AddNewModal: React.FC<AddNewModalProps> = ({
 							<AddNewModalButton
 								key={index}
 								title={item}
-								handleButtonPress={() => handleButtonPress(item)}
+								handleButtonPress={handleButtonPress(item)}
 							/>
 						))}
 						<AddNewModalButton
