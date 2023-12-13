@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useLayoutEffect } from 'react'
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import AddNewModal from '../components/AddNewModal'
 import ExpenseModal from '../components/ExpenseModal'
 import ExpensesList from '../components/ExpensesList'
@@ -64,7 +64,10 @@ const Home = () => {
 		}
 	}
 
-	const groupedExpenses = formatArray(expenses) as UnspecifiedObject
+	const groupedExpenses = React.useMemo(
+		() => formatArray(expenses) as UnspecifiedObject,
+		[expenses]
+	)
 
 	return (
 		<>
@@ -123,20 +126,11 @@ const Home = () => {
 					</View>
 				</View>
 			</View>
-			{loading ? (
-				<View style={styles.empty_list_container}>
-					<ActivityIndicator size={'large'} />
-				</View>
-			) : Object.keys(expenses).length === 0 ? (
-				<View style={styles.empty_list_container}>
-					<Text style={{ fontSize: 20, fontWeight: '700' }}>No expenses</Text>
-				</View>
-			) : (
-				<ExpensesList
-					expenses={groupedExpenses}
-					setSelected={setSelectedExpense}
-				/>
-			)}
+			<ExpensesList
+				isLoading={loading}
+				expenses={groupedExpenses}
+				setSelected={setSelectedExpense}
+			/>
 		</>
 	)
 }
